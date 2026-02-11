@@ -1,0 +1,22 @@
+volcengine:
+  access_key: "YOUR_BYTEPLUS_ACCESS_KEY"
+  secret_key: "YOUR_BYTEPLUS_SECRET_KEY"
+  region: "ap-southeast-1"
+
+model:
+  agent:
+    name: "deepseek-v3-2-251201"
+    api_base: "https://ark.ap-southeast.bytepluses.com/api/v3/"
+    api_key: "YOUR_ARK_API_KEY"
+  video:
+    name: "seedance-1-5-pro-251215"
+    api_base: "https://ark.ap-southeast.bytepluses.com/api/v3/"
+    api_key: "YOUR_ARK_API_KEY"
+  image:
+    name: "seedream-4-5-251128"
+    api_base: "https://ark.ap-southeast.bytepluses.com/api/v3/"
+    api_key: "YOUR_ARK_API_KEY"
+
+database:
+  tos:
+    bucket: "agentkit-platform-{account_id}"

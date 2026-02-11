@@ -5,7 +5,7 @@ This is a "Fable Storybook Video Generation" Agent based on Volcano Engine Agent
 - Generate four cartoon-style storyboard illustrations
 - Generate three transitional video segments with adjacent storyboards as the start and end frames
 - Stitch the three video segments sequentially into a complete film using a local MCP tool
-- Upload the finished film to Volcano Engine TOS and return an accessible signed URL
+- Upload the finished film to BytePlus TOS and return an accessible signed URL
 
 ## Overview
 
@@ -182,7 +182,10 @@ Use `veadk web` for local debugging:
 
 ```bash
 # 1. Go to the parent directory
-cd 02-use-cases
+cd use-cases
+
+# 1.1 Create config.yaml for VeADK (required)
+cp config.yaml.example config.yaml
 
 # 2. Start the veadk web interface
 veadk web
@@ -216,9 +219,6 @@ Step 0: Install/upgrade AgentKit SDK (CLI)
 pip install 'agentkit-sdk-python>=0.5.1'
 
 # or use uv
-uv venv --python 3.12
-source .venv/bin/activate
-uv sync
 uv pip install 'agentkit-sdk-python>=0.5.1'
 ```
 

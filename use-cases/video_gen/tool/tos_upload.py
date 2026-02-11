@@ -74,7 +74,7 @@ def upload_file_to_tos(
     Usage example:
         >>> url = upload_file_to_tos("./video.mp4")
         >>> print(url)
-        https://bucket.tos-cn-beijing.volces.com/video.mp4?X-Tos-Signature=...
+        https://bucket.tos-ap-southeast-1.bytepluses.com/video.mp4?X-Tos-Signature=...
     """
 
     if bucket_name is None:
