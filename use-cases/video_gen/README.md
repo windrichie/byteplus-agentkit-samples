@@ -1,5 +1,7 @@
 # Video Generation Agent - Video Story Generator
 
+Forked from: https://github.com/bytedance/agentkit-samples/tree/main/02-use-cases/video_gen
+
 This is a "Fable Storybook Video Generation" Agent based on Volcano Engine AgentKit. It will, based on the user-inputted fable storyline:
 
 - Generate four cartoon-style storyboard illustrations

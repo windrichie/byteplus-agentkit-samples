@@ -1,4 +1,6 @@
-# Session 1 - Agent with the Sandbox Tool
+# Agent with the Sandbox Tool
+
+Forked from https://github.com/bytedance/agentkit-samples/tree/main/01-tutorials/workshop/session1/sandbox_tool_sample
 
 ## Overview
 
