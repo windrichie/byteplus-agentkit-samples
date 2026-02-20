@@ -1,0 +1,4 @@
+python-dotenv>=1.2.1
+agentkit-sdk-python>=0.5.1
+veadk-python>=0.2.29
+google-genai

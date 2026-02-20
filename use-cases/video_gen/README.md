@@ -238,35 +238,28 @@ export BYTEPLUS_ACCESS_KEY=<your_ak>
 export BYTEPLUS_SECRET_KEY=<your_sk>
 ```
 
-Step 2: Configure cloud provider and region
-
-```bash
-agentkit config --cloud_provider byteplus
-agentkit config --region ap-southeast-1
-
-# Or set a global default:
-agentkit config --global --set defaults.cloud_provider=byteplus
-```
-
-Step 3: Enter the project directory
+Step 2: Enter the project directory
 
 ```bash
 cd 02-use-cases/video_gen
 ```
 
-Step 4: Configure AgentKit
+Step 3: Configure AgentKit
 
 ```bash
 agentkit config \
 --agent_name storybook_illustrator \
 --entry_point 'agent.py' \
 --cloud_provider byteplus \
---region ap-southeast-1 \
 --runtime_envs DATABASE_TOS_BUCKET=agentkit-platform-{{your_account_id}} \
 --launch_type cloud
 ```
 
-Step 5: Modify the `agentkit.yaml` deployment configuration
+```bash
+agentkit config --region ap-southeast-1
+```
+
+Step 4: Modify the `agentkit.yaml` deployment configuration
 
 > Purpose: After modification, it will pre-install video-clip-mcp during the image build phase to accelerate runtime startup.
 
