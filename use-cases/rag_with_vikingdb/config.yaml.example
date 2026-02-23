@@ -1,0 +1,20 @@
+byteplus:
+  access_key: "<your_byteplus_access_key>"
+  secret_key: "<your_byteplus_secret_key>"
+  region: "ap-southeast-1"
+
+model:
+  agent:
+    name: "deepseek-v3-2-251201"
+    api_base: "https://ark.ap-southeast.bytepluses.com/api/v3/"
+    api_key: "<your_modelark_api_key>"
+
+database:
+  tos:
+    bucket: "<your_cn_hk_tos_bucket>"
+    region: "cn-hongkong"
+    endpoint: "tos-cn-hongkong.bytepluses.com"
+  viking:
+    collection: "<your_vikingdb_collection>"
+    base_url: "https://api-knowledgebase.mlp.cn-hongkong.bytepluses.com"
+    region: "cn-hongkong"
