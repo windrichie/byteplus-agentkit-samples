@@ -1,6 +1,6 @@
-from veadk.knowledgebase.knowledgebase import KnowledgeBase
 import os
-import tos
+from veadk.configs.database_configs import NormalTOSConfig
+from veadk.knowledgebase.knowledgebase import KnowledgeBase
 
 
 def main() -> None:
@@ -8,15 +8,9 @@ def main() -> None:
     if not bucket:
         raise ValueError("DATABASE_TOS_BUCKET is required")
 
-    region = os.getenv("DATABASE_TOS_REGION", "cn-hongkong")
-    endpoint = os.getenv("DATABASE_TOS_ENDPOINT", f"tos-{region}.bytepluses.com")
-    ak = os.getenv("BYTEPLUS_ACCESS_KEY") or os.getenv("VOLCENGINE_ACCESS_KEY")
-    sk = os.getenv("BYTEPLUS_SECRET_KEY") or os.getenv("VOLCENGINE_SECRET_KEY")
-    if not ak or not sk:
-        raise ValueError("BYTEPLUS_ACCESS_KEY and BYTEPLUS_SECRET_KEY are required")
-
-    client = tos.TosClientV2(ak=ak, sk=sk, endpoint=endpoint, region=region)
-    client.head_bucket(bucket)
+    knowledge_collection_name = os.getenv("DATABASE_VIKING_COLLECTION", "")
+    if not knowledge_collection_name:
+        raise ValueError("DATABASE_VIKING_COLLECTION is required")
 
     with open("/tmp/product_info.txt", "w") as f:
         f.write(
@@ -27,33 +21,29 @@ def main() -> None:
             "After-sales policy:\n1. Warranty: All electronics come with a 1-year free warranty.\n2. Returns/Exchanges: 7-day no-reason returns; exchanges within 15 days for quality issues.\n3. Support: 7x24 customer support."
         )
 
-    with open("/tmp/product_info.txt", "rb") as f:
-        client.put_object(
-            bucket=bucket,
-            key="knowledgebase/product_info.txt",
-            content=f.read(),
+    provider = os.getenv("CLOUD_PROVIDER")
+    is_byteplus = bool(provider and provider.lower() == "byteplus")
+    if is_byteplus:
+        kb = KnowledgeBase(
+            backend="viking",
+            backend_config={
+                "index": knowledge_collection_name,
+                "tos_config": NormalTOSConfig(
+                    bucket=os.getenv("DATABASE_TOS_BUCKET", ""),
+                    region=os.getenv("DATABASE_TOS_REGION", "cn-hongkong"),
+                    endpoint=os.getenv(
+                        "DATABASE_TOS_ENDPOINT", "tos-cn-hongkong.bytepluses.com"
+                    ),
+                ),
+            },
         )
-    with open("/tmp/service_policy.txt", "rb") as f:
-        client.put_object(
-            bucket=bucket,
-            key="knowledgebase/service_policy.txt",
-            content=f.read(),
-        )
+    else:
+        kb = KnowledgeBase(backend="viking", index=knowledge_collection_name)
 
-    kb = KnowledgeBase(
-        backend="viking",
-        app_name=os.getenv("DATABASE_VIKING_COLLECTION", "agentkit_knowledge_app"),
+    kb.add_from_files(
+        files=["/tmp/product_info.txt", "/tmp/service_policy.txt"],
+        tos_bucket_name=bucket,
     )
-    for object_key in [
-        "knowledgebase/product_info.txt",
-        "knowledgebase/service_policy.txt",
-    ]:
-        response = kb._backend._add_doc(tos_url=f"{bucket}/{object_key}")
-        if response.get("code") != 0:
-            raise ValueError(
-                f"Failed to add doc {object_key}: {response.get('code')} {response.get('message')}"
-            )
-
 
 if __name__ == "__main__":
     main()

@@ -45,8 +45,17 @@ LLM Generates Answer
 **Knowledge Base Creation** (setup_kb.py, run once):
 
 ```python
-kb = KnowledgeBase(backend="viking", app_name=os.getenv("DATABASE_VIKING_COLLECTION", "agentkit_knowledge_app"))
-# The setup script uploads files to TOS, then registers them in VikingDB by TOS path.
+kb = KnowledgeBase(
+    backend="viking",
+    backend_config={
+        "index": os.getenv("DATABASE_VIKING_COLLECTION"),
+        "tos_config": NormalTOSConfig(
+            bucket=os.getenv("DATABASE_TOS_BUCKET"),
+            region=os.getenv("DATABASE_TOS_REGION"),
+            endpoint=os.getenv("DATABASE_TOS_ENDPOINT"),
+        ),
+    },
+)
 ```
 
 **Agent Configuration** (agent.py):
@@ -69,7 +78,7 @@ rag_with_vikingdb/
 ├── config.yaml        # Local config (do not commit secrets)
 ├── requirements.txt   # Python dependency list
 ├── pyproject.toml     # Project configuration (uv dependency management)
-└── README_en.md        # Project documentation
+└── README.md          # Project documentation
 ```
 
 ## Local Execution
@@ -149,12 +158,12 @@ Notes:
 Run this once to create the VikingDB knowledge base from the local demo documents:
 
 ```bash
-export BYTEPLUS_ACCESS_KEY=<your_byteplus_access_key>
-export BYTEPLUS_SECRET_KEY=<your_byteplus_secret_key>
+export CLOUD_PROVIDER=byteplus
+export DATABASE_VIKING_COLLECTION=<your_vikingdb_collection>
 export DATABASE_TOS_BUCKET=<your_cn_hk_tos_bucket>
-export DATABASE_TOS_REGION=cn-hongkong
-export DATABASE_TOS_ENDPOINT=tos-cn-hongkong.bytepluses.com
 ```
+
+The remaining settings (ModelArk, VikingDB base URL/region, TOS endpoint/region, and BytePlus AK/SK) are loaded automatically from `config.yaml`.
 
 ```bash
 uv run setup_kb.py
@@ -203,6 +212,8 @@ uv run agent.py
 **4. Prepare BytePlus AK/SK**
 
 ### AgentKit Cloud Deployment
+
+If you do not want to bundle credentials in `config.yaml`, set them as AgentKit runtime env vars/secrets instead and keep `config.yaml` out of the package.
 
 ```bash
 # Enter the rag_with_vikingdb directory
