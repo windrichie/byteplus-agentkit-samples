@@ -1,0 +1,4 @@
+model:
+  agent:
+    name: "deepseek-v3-2-251201"
+    api_base: "https://ark.ap-southeast.bytepluses.com/api/v3/"
