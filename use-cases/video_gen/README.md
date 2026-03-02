@@ -2,7 +2,7 @@
 
 Forked from: https://github.com/bytedance/agentkit-samples/tree/main/02-use-cases/video_gen
 
-This is a "Fable Storybook Video Generation" Agent based on Volcano Engine AgentKit. It will, based on the user-inputted fable storyline:
+This is a "Fable Storybook Video Generation" Agent based on BytePlus AgentKit. It will, based on the user-inputted fable storyline:
 
 - Generate four cartoon-style storyboard illustrations
 - Generate three transitional video segments with adjacent storyboards as the start and end frames
@@ -66,30 +66,15 @@ Key features include:
 - Ensure the `npx` command is available in the terminal
 - Required for running the MCP video stitching tool
 
-#### Volcano Engine Access Credentials
+#### BytePlus Credentials and ModelArk
 
-1.  Log in to the [Volcano Engine Console](https://console.volcengine.com)
-2.  Go to "Access Control" → "Users" -> Create a new user or search for an existing username -> Click the username to enter "User Details" -> Go to "Keys" -> Create a new key or copy an existing AK/SK
-    -   As shown in the figure below
-        ![Volcengine AK/SK Management](../img/volcengine_aksk.jpg)
-3.  Configure access permissions for the services that AgentKit depends on for the user:
-    -   On the "User Details" page -> Go to "Permissions" -> Click "Add Permission", and grant the following policies to the user
-    -   `AgentKitFullAccess` (AgentKit full access)
-    -   `APMPlusServerFullAccess` (APMPlus full access)
-4.  Obtain the Volcano Ark model Agent API Key for the user
-    -   Search for the "Volcano Ark" product and click to enter the console
-    -   Go to "API Key Management" -> Create or copy an existing API Key
-    -   As shown in the figure below
-        ![Ark API Key Management](../img/ark_api_key_management.jpg)
-5.  Activate the model's pre-built inference access point
-    -   Search for the "Volcano Ark" product and click to enter the console
-    -   Go to "Activation Management" -> "Language Models" -> Find the corresponding model -> Click "Activate Service"
-    -   Activate the following models used in this case
-        -   root_agent model: `deepseek-v3-1-terminus`
-        -   Image generation model: `doubao-seedream-4-0-250828`
-        -   Video generation model: `doubao-seedance-1-0-pro-250528`
-    -   As shown in the figure below
-        ![Ark Model Service Management](../img/ark_model_service_management.jpg)
+1.  Log in to the [BytePlus Console](https://console.byteplus.com).
+2.  Go to **Access Control** → **Users** → **Keys** and create/copy your AK/SK.
+3.  In **ModelArk**, create an API key.
+4.  Enable the models used in this case:
+    -   Root agent: `deepseek-v3-2-251201`
+    -   Image generation: `seedream-4-5-251128`
+    -   Video generation: `seedance-1-5-pro-251215`
 
 ### Install Dependencies
 
@@ -99,7 +84,7 @@ Key features include:
 # install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-cd 02-use-cases/video_gen
+cd use-cases/video_gen
 
 # create virtual environment
 uv venv --python 3.12
@@ -114,14 +99,18 @@ uv sync
 Set the following environment variables:
 
 ```bash
-export VOLCENGINE_ACCESS_KEY={your_ak}
-export VOLCENGINE_SECRET_KEY={your_sk}
+export VOLCENGINE_ACCESS_KEY=<your_byteplus_ak>
+export VOLCENGINE_SECRET_KEY=<your_byteplus_sk>
 export DATABASE_TOS_BUCKET=agentkit-platform-{{your_account_id}}
-export MODEL_AGENT_API_KEY={{your_model_agent_api_key}} # Get from ModelArk, required for local debugging
+export MODEL_AGENT_API_KEY=<your_modelark_api_key>
+export MODEL_IMAGE_API_KEY=<your_modelark_api_key>
+export MODEL_VIDEO_API_KEY=<your_modelark_api_key>
 
-# Optional: Specify download directory (defaults to project root)
+# Optional
 export DOWNLOAD_DIR=/tmp
 ```
+
+You can also store the three ModelArk API keys in `config.yaml` under `model.agent/api_key`, `model.image/api_key`, and `model.video/api_key`.
 
 **TOS Bucket Configuration:**
 
@@ -183,8 +172,8 @@ Use `veadk web` for local debugging:
 > `veadk web` is a web service based on FastAPI for debugging Agent applications. When you run this command, it starts a web server that loads and runs your agentkit agent code, while also providing a chat interface where you can interact with the agent. In the sidebar or a specific panel of the interface, you can view the details of the agent's execution, including the Thought Process, Tool calls, and model input/output.
 
 ```bash
-# 1. Go to the parent directory
-cd use-cases
+# 1. Go to the project directory
+cd use-cases/video_gen
 
 # 1.1 Create config.yaml for VeADK (required)
 cp config.yaml.example config.yaml
@@ -243,7 +232,7 @@ export BYTEPLUS_SECRET_KEY=<your_sk>
 Step 2: Enter the project directory
 
 ```bash
-cd 02-use-cases/video_gen
+cd use-cases/video_gen
 ```
 
 Step 3: Configure AgentKit
@@ -260,6 +249,8 @@ agentkit config \
 ```bash
 agentkit config --region ap-southeast-1
 ```
+
+If you do not want to include ModelArk API keys in the package, set them as runtime env vars/secrets (for example `MODEL_AGENT_API_KEY`, `MODEL_IMAGE_API_KEY`, `MODEL_VIDEO_API_KEY`) in the AgentKit console or in `agentkit.yaml`.
 
 Step 4: Modify the `agentkit.yaml` deployment configuration
 
@@ -309,7 +300,7 @@ agentkit invoke '{"prompt": "Draw a story of a panda's adventure in Chinese styl
 **Create a session:**
 
 ```bash
-curl --location --request POST 'https://xxxxx.apigateway-cn-beijing.volceapi.com/apps/storybook_illustrator/users/u_123/sessions/s_124' \
+curl --location --request POST '<runtime_endpoint>/apps/storybook_illustrator/users/u_123/sessions/s_124' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: <your_api_key>' \
 --data ''
@@ -318,7 +309,7 @@ curl --location --request POST 'https://xxxxx.apigateway-cn-beijing.volceapi.com
 **Send a message:**
 
 ```bash
-curl --location 'https://xxxxx.apigateway-cn-beijing.volceapi.com/run_sse' \
+curl --location '<runtime_endpoint>/run_sse' \
 --header 'Authorization: <your_api_key>' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -347,9 +338,8 @@ video_gen/
 ├── requirements.txt      # Python dependencies
 ├── pyproject.toml        # Project configuration (uv/pip dependencies and metadata)
 ├── __init__.py           # Package initialization file
-├── .python-version       # Python version declaration (development environment)
-├── README.md            # Project documentation
-└── .dockerignore         # Docker build exclusions
+├── README.md             # Project documentation
+└── config.yaml.example   # VeADK configuration template
 ```
 
 ## Demonstration
@@ -365,7 +355,7 @@ Video generation effect demonstration.
 
 **TOS upload failed:**
 
--   Confirm that `VOLCENGINE_ACCESS_KEY` and `VOLCENGINE_SECRET_KEY` are set
+-   Confirm that `VOLCENGINE_ACCESS_KEY` and `VOLCENGINE_SECRET_KEY` are set (use your BytePlus AK/SK values)
 -   Verify that your account has TOS bucket access permissions
 
 **MCP tool connection error:**
@@ -386,10 +376,10 @@ Video generation effect demonstration.
 
 ## 🔗 Related Resources
 
--   [AgentKit Official Documentation](https://www.volcengine.com/docs/86681/1844878?lang=en)
--   [TOS Object Storage](https://www.volcengine.com/product/TOS)
--   [AgentKit Console](https://console.volcengine.com/agentkit/region:agentkit+cn-beijing/overview?projectName=default)
--   [Volcano Ark Console](https://console.volcengine.com/ark/region:ark+cn-beijing/overview?briefPage=0&briefType=introduce&type=new)
+-   [AgentKit Documentation](https://volcengine.github.io/agentkit-sdk-python/)
+-   [BytePlus TOS](https://www.byteplus.com/product/tos)
+-   [BytePlus AgentKit Console](https://console.byteplus.com/agentkit)
+-   [BytePlus ModelArk Console](https://console.byteplus.com/ark)
 
 ## Code License
 
