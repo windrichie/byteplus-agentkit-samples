@@ -1,0 +1,10 @@
+[project]
+name = "video-generate-debug"
+version = "0.1.0"
+description = "Reproduction of veadk-python generate_audio=False bug"
+requires-python = ">=3.12"
+dependencies = [
+    "veadk-python>=0.5.25",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+]
