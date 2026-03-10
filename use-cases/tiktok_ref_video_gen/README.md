@@ -25,7 +25,7 @@ Director Agent
 
 - **Reference Video Analysis**: Uses a vision model to deeply analyze the reference TikTok — hook strategy, camera movements, pacing, lighting, and scene structure.
 - **Product-Aware Storyboarding**: Analyzes the product image and adapts the reference video's style into a 3–4 scene storyboard tailored to the product.
-- **Reference-Based Image Generation**: Uses Seedream's `single_image_to_single` mode with `guidance_scale` to generate scene keyframes that faithfully preserve the product's appearance.
+- **Reference-Based Image Generation**: Uses Seedream's `single_image_to_single` mode to generate scene keyframes that faithfully preserve the product's appearance.
 - **Video Animation**: Animates each keyframe into a 5-second clip using Seedance 1.5 Pro in 9:16 vertical format.
 - **Local Video Assembly**: Downloads all clips locally and merges them using the `video-clip-mcp` MCP tool (requires ffmpeg).
 - **TOS Hosting**: All intermediate and final assets are hosted on BytePlus TOS, returning a signed URL for easy sharing.
@@ -49,14 +49,14 @@ Director Agent
 | `upload_to_tos` | custom | Uploads a local file to TOS; returns a pre-signed URL |
 | `analyze_reference_video` | custom | Sends video to vision model; returns structured JSON analysis |
 | `analyze_product_image` | custom | Sends product image to vision model; returns product profile |
-| `image_generate` | custom wrapper | Generates Seedream keyframes with `guidance_scale` support |
-| `video_generate` | veadk built-in | Animates keyframes using Seedance 1.5 Pro |
+| `image_generate` | veadk built-in | Generates Seedream keyframes via `single_image_to_single` |
+| `video_generate` | custom wrapper | Animates keyframes using Seedance; fixes `generate_audio=false` being dropped |
 | `file_download` | custom | Batch-downloads remote files to local storage |
 | `mergeVideos` | MCP | Stitches local video files together |
 | `clipVideo` | MCP | Trims a local video clip |
 | `getVideoInfo` | MCP | Reads duration/metadata of a local video |
 
-> **Note on `image_generate`**: The custom wrapper in `tools/image_generate.py` exists because the veadk 0.5.25 built-in silently drops the `guidance_scale` parameter, causing reference-based generation to produce low-adherence results. This wrapper fixes that by passing `guidance_scale` directly to the Ark API.
+> **Note on `video_generate` wrapper**: `tools/video_generate.py` is a custom wrapper around the veadk built-in to fix a bug where `generate_audio=False` is silently dropped. The built-in's `_should_disable_audio` converts `False` to `None`, causing the field to be omitted from the request — and Seedance generates audio by default when the field is absent. See [`video_generate_debug/`](../../video_generate_debug/) for a full reproduction.
 
 ## Quick Start
 
@@ -153,17 +153,17 @@ export MODEL_VIDEO_API_KEY=<your_ark_api_key>
 `veadk web` provides a browser-based chat UI with full tool call and thought process visibility.
 
 ```bash
-# Run from the parent directory (use-cases/)
+# Run from the parent directory (use-cases/) using the project venv's veadk
 cd use-cases/
-
-# Start the web interface
-veadk web
+../use-cases/tiktok_ref_video_gen/.venv/bin/veadk web
 
 # Open http://localhost:8000 in your browser
 # Select the "tiktok_ref_video_gen" agent and start chatting
 ```
 
 > **Important**: Run `veadk web` from the **parent** directory (`use-cases/`), not from inside `tiktok_ref_video_gen/`. VeADK scans subdirectories to discover agents.
+>
+> **Version pitfall**: If you have veadk installed globally via pyenv, `veadk web` may pick up an older version (e.g. 0.2.29) instead of the project's 0.5.25+. Always use the project venv's binary directly (`.venv/bin/veadk web`) or verify with `which veadk` that it points to the `.venv`.
 
 ### Method 2: Direct API
 
@@ -363,7 +363,8 @@ tiktok_ref_video_gen/
 │   ├── upload_to_tos.py        # Upload files to TOS; return signed URL
 │   ├── analyze_reference.py    # VLM analysis of reference video
 │   ├── analyze_product.py      # VLM analysis of product image
-│   ├── image_generate.py       # Custom wrapper: Seedream with guidance_scale
+│   ├── image_generate.py       # (unused) Custom wrapper kept as fallback
+│   ├── video_generate.py       # Custom wrapper: Seedance with generate_audio fix
 │   └── file_download.py        # Batch download remote files locally
 ├── utils/
 │   └── seed_client.py          # BytePlus ModelArk Vision API client (with retry logic)
@@ -384,8 +385,8 @@ tiktok_ref_video_gen/
 - Check that `DATABASE_TOS_BUCKET` matches your actual bucket name including account ID.
 
 **Reference image not applied to generated images**
-- The `image` parameter must be a TOS-hosted URL. External CDN URLs (iStockphoto, Google Images, etc.) are not reliably accessible from Seedream's servers. The workflow uploads the product image to TOS first to ensure this.
-- The custom `image_generate` wrapper ensures `guidance_scale` is sent to the API (the veadk 0.5.25 built-in drops this parameter).
+- Ensure you are running veadk >= 0.5.25. Older versions (e.g. 0.2.29) silently drop the `image` parameter from the API request. Check with: `python -c "from veadk.version import VERSION; print(VERSION)"`
+- If using `veadk web`, verify it picks up the correct version — pyenv shims may resolve to an older global install. Use the project venv's binary directly: `.venv/bin/veadk web`
 
 **Generated video has Chinese audio**
 - Audio generation is disabled by default (`generate_audio: false`). If you see Chinese audio, check that the agent is not overriding this default. Only set `generate_audio: true` if you explicitly want audio.

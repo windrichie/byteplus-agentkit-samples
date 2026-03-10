@@ -27,9 +27,9 @@ from tools.analyze_product import analyze_product_image
 from tools.analyze_reference import analyze_reference_video
 from tools.download_tiktok import download_tiktok_video
 from tools.file_download import file_download
-from tools.image_generate import image_generate  # custom wrapper: adds guidance_scale support missing from veadk built-in
 from tools.upload_to_tos import upload_to_tos
-from veadk.tools.builtin_tools.video_generate import video_generate
+from veadk.tools.builtin_tools.image_generate import image_generate
+from tools.video_generate import video_generate  # custom wrapper: fixes generate_audio=false being dropped by veadk built-in
 
 # Load environment variables
 load_dotenv()
