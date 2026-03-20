@@ -1,0 +1,18 @@
+byteplus:
+  access_key: "<Your Byteplus Access Key>"
+  secret_key: "<Your Byteplus Secret Key>"
+  region: "ap-southeast-1"
+
+model:
+  agent:
+    name: "deepseek-v3-2-251201"
+    api_base: "https://ark.ap-southeast.bytepluses.com/api/v3/"
+    api_key: "<Your Ark API Key>"
+  video:
+    name: "seedance-1-5-pro-251215"
+    api_base: "https://ark.ap-southeast.bytepluses.com/api/v3/"
+    api_key: "<Your Ark API Key>"
+  image:
+    name: "seedream-4-5-251128"
+    api_base: "https://ark.ap-southeast.bytepluses.com/api/v3/"
+    api_key: "<Your Ark API Key>"
