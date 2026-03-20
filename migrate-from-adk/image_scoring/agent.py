@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 from agentkit.apps import AgentkitAgentServerApp
 from google.adk.agents.callback_context import CallbackContext
-from veadk import Agent
+from veadk import Runner
 from veadk.agents.loop_agent import LoopAgent
 from veadk.agents.sequential_agent import SequentialAgent
 from veadk.memory.short_term_memory import ShortTermMemory
@@ -75,10 +75,13 @@ root_agent = image_scoring
 short_term_memory = ShortTermMemory(backend="local")
 root_agent.short_term_memory = short_term_memory
 
+runner = Runner(agent=root_agent)
+
+agent_server_app = AgentkitAgentServerApp(
+    agent=root_agent,
+    short_term_memory=short_term_memory,
+)
+
 if __name__ == "__main__":
-    agent_server_app = AgentkitAgentServerApp(
-        agent=root_agent,
-        short_term_memory=short_term_memory,
-    )
     port = int(os.getenv("PORT", "8000"))
     agent_server_app.run(host="0.0.0.0", port=port)

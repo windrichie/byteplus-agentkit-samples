@@ -47,7 +47,6 @@ async def generate_images(imagen_prompt: str, tool_context: ToolContext) -> dict
     result = await veadk_image_generate(
         tasks=tasks,
         tool_context=tool_context,
-        model_name=config.IMAGE_MODEL_NAME,
     )
     image_url = _extract_first_url(result)
     if not image_url:
