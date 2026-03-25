@@ -36,7 +36,7 @@ LLM Generates Answer
 | - | - |
 | **Agent Service** | agent.py - The main application that integrates KnowledgeBase and VikingDB. |
 | **Knowledge Base** | VikingDB vector database, storing document vector indexes. |
-| **Document Sources** | product_info.txt, service_policy.txt (generated locally during setup). |
+| **Document Sources** | product_info.txt, service_policy.txt, outlet_locations.txt, warranty_terms.txt, troubleshooting_guide.txt, repair_guide.txt (generated locally during setup). |
 | **Project Configuration** | pyproject.toml - Dependency management (uv tool). |
 | **Short-term Memory** | Maintains session context. |
 
@@ -144,9 +144,12 @@ Create a `config.yaml` file (copy from `config.yaml.example`) and fill in your B
 cp config.yaml.example config.yaml
 ```
 
-Notes:
+**Important Notes for BytePlus Users:**
 
-- Use `byteplus.access_key` and `byteplus.secret_key` in `config.yaml` (BytePlus names are supported).
+1.  **Credential Names**: The underlying SDK for viking knowledge base backend currently expects `VOLCENGINE_ACCESS_KEY` and `VOLCENGINE_SECRET_KEY` even when using BytePlus. Ensure you set these in your `.env` or `config.yaml`.
+2.  **Cloud Provider**: You MUST set the environment variable `CLOUD_PROVIDER=byteplus`. This tells the SDK to use the BytePlus-specific endpoints (`bytepluses.com`) instead of the default Volcengine ones.
+
+Additional Notes:
 - This example assumes your VikingDB collection is in **CN‑HK** and your TOS bucket is created in **CN‑HK** as well.
 - If your collection is in a different region, update both `database.viking.region` and `database.tos.region` to the same region.
 - The setup script uploads files to TOS using `database.tos.endpoint`.

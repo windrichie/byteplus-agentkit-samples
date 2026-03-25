@@ -1,14 +1,22 @@
+# Global Settings
+cloud_provider: "byteplus"
+
+# BytePlus Credentials
+# Note: The underlying Viking SDK currently expects these legacy names
+# You can also set these as VOLCENGINE_ACCESS_KEY in your environment
 byteplus:
   access_key: "<your_byteplus_access_key>"
   secret_key: "<your_byteplus_secret_key>"
   region: "ap-southeast-1"
 
+# ModelArk Configuration
 model:
   agent:
     name: "deepseek-v3-2-251201"
     api_base: "https://ark.ap-southeast.bytepluses.com/api/v3/"
     api_key: "<your_modelark_api_key>"
 
+# Database & Storage Configuration
 database:
   tos:
     bucket: "<your_cn_hk_tos_bucket>"

@@ -1,0 +1,26 @@
+Symptom-Based Troubleshooting Guide:
+1. Laptop Troubleshooting:
+   - Laptop won't turn on: Check if the battery is charged, plug in the AC adapter, and try a hard reset (hold power for 30s).
+   - Blue screen of death (BSOD): Restart the laptop, update drivers, or perform a system restore.
+   - Overheating: Clean the air vents, use a cooling pad, and close unnecessary background apps.
+   - Wi-Fi connection issues: Restart the router, toggle Wi-Fi on the laptop, or update the Wi-Fi driver.
+2. Smartphone Troubleshooting:
+   - Fast battery drain: Reduce screen brightness, close unused apps, or check for battery-intensive background processes.
+   - Screen flicker or unresponsive: Restart the phone, remove the screen protector, or check for software updates.
+   - App crashes or freezes: Clear the app cache, update the app, or reinstall the app.
+   - No signal or call issues: Toggle airplane mode, check the SIM card, or contact your mobile carrier.
+3. Tablet Troubleshooting:
+   - Tablet won't charge: Use a different charging cable or adapter, clean the charging port, or try a different power outlet.
+   - Slow performance: Clear cache, delete unused files, or perform a factory reset (after backing up data).
+   - Screen rotation issues: Check the rotation lock setting or restart the tablet.
+   - Bluetooth connection problems: Unpair and re-pair devices, or reset Bluetooth settings.
+4. General Device Troubleshooting:
+   - Device freezing or lagging: Restart the device, check for software updates, and ensure enough storage space.
+   - External device not recognized: Try a different port, check cables, and ensure proper drivers are installed.
+   - Sound or speaker issues: Check volume settings, test with headphones, and update audio drivers.
+   - Camera not working: Restart the device, check for camera permissions, and ensure the lens is clean.
+5. Home Appliance Troubleshooting:
+   - Smart TV won't connect to Wi-Fi: Restart the TV and router, check the signal strength, or use an Ethernet cable.
+   - Robotic vacuum won't return to base: Ensure the base is in an open area, clean the sensors, and check for obstructions.
+   - Action camera freezing: Format the SD card, update the firmware, and use a recommended high-speed SD card.
+   - Smart home hub not responding: Check the internet connection, restart the hub, and ensure it's within range of other devices.

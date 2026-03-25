@@ -1,7 +1,111 @@
 Product list and prices:
+
 1. High-Performance Laptop (Laptop Pro) - Price: 8999
-   - For professional design and gaming, equipped with the latest GPU.
+   - Equipped with the latest generation NVIDIA GeForce RTX 5080 GPU for extreme gaming and AI workloads.
+   - Features a 16-inch Liquid Retina XDR display with 120Hz ProMotion technology for fluid visuals.
+   - Integrated thermal management system with dual vapor chambers to maintain peak performance during heavy usage.
+
 2. SmartPhone (SmartPhone X) - Price: 4999
-   - 5G support, long battery life.
+   - Features a 6.7-inch Super AMOLED display with adaptive refresh rate from 1Hz to 120Hz.
+   - Massive 5000mAh battery with 100W SuperCharge technology, reaching 100% in just 30 minutes.
+   - Advanced triple-lens camera system with a 108MP main sensor for stunning low-light photography.
+
 3. Tablet (Tablet Air) - Price: 2999
-   - Lightweight and portable, suitable for work and entertainment.
+   - Ultra-thin 6.1mm design, making it the most portable professional-grade tablet in its class.
+   - Powered by the M-series chip, delivering up to 60% faster performance than previous models.
+   - Supports 2nd Gen Stylus with magnetic charging and industry-leading low latency.
+
+4. Ultra-Thin Ultrabook (Laptop Slim) - Price: 6999
+   - Aerospace-grade magnesium alloy chassis, weighing only 980g for ultimate mobility.
+   - Exceptional 18-hour battery life, designed to last through a full day of meetings and international flights.
+   - Bezel-less 4K OLED touchscreen with 100% DCI-P3 color gamut for vibrant and accurate colors.
+
+5. Budget Student Laptop (Laptop Lite) - Price: 3499
+   - Durable spill-resistant keyboard and reinforced corners to withstand the rigors of student life.
+   - Pre-installed with essential productivity software and cloud storage tools for seamless learning.
+   - Long-lasting battery that supports a full day of lectures without needing a recharge.
+
+6. Professional Workstation (Desktop Max) - Price: 12999
+   - Massive 128GB of high-speed DDR5 RAM to handle the most complex 3D rendering and simulation tasks.
+   - Multi-drive RAID configuration providing both high-capacity storage and lightning-fast data redundancy.
+   - Industrial-grade cooling system designed for continuous 24/7 operation under heavy professional loads.
+
+7. Flagship Smartphone (SmartPhone Ultra) - Price: 6499
+   - Revolutionary 200MP Quad-Pixel sensor with 100x Space Zoom and laser autofocus.
+   - Under-display selfie camera providing a truly uninterrupted full-screen cinematic experience.
+   - Integrated AI processor for real-time 8K video stabilization and advanced night-mode features.
+
+8. Budget Smartphone (SmartPhone Mini) - Price: 1999
+   - Ergonomic 5.4-inch design that fits perfectly in one hand while offering a sharp Full HD+ display.
+   - IP67 water and dust resistance, offering durability that is rare in its price segment.
+   - Clean software experience with guaranteed security updates for 3 years.
+
+9. Pro Tablet (Tablet Pro) - Price: 4499
+   - 12.9-inch Mini-LED display with 1600 nits peak brightness for HDR content creation.
+   - Thunderbolt 4 port for connecting high-speed external drives and 6K resolution monitors.
+   - Quad-speaker audio system providing spatial audio for an immersive studio-quality experience.
+
+10. Gaming Tablet (Tablet Game) - Price: 3799
+    - Specialized 144Hz ultra-responsive display for a competitive edge in fast-paced mobile games.
+    - Integrated side-mounted shoulder triggers and advanced haptic feedback for a console-like experience.
+    - Dedicated "Game Mode" software to optimize CPU/GPU performance and block incoming distractions.
+
+11. Noise-Canceling Headphones (Audio Pro) - Price: 1499
+    - Custom-engineered 40mm drivers delivering rich bass and crystal-clear high-frequency detail.
+    - Intelligent active noise cancellation that adapts to your environment in real-time.
+    - Multi-point Bluetooth connectivity allows you to switch seamlessly between your phone and laptop.
+
+12. Wireless Earbuds (Audio Buds) - Price: 699
+    - Ergonomic secure-fit wingtips that stay in place during the most intense workouts.
+    - IPX5 sweat and water resistance, perfect for outdoor running in any weather condition.
+    - Compact charging case providing up to 30 hours of total playback time with quick-charge support.
+
+13. Professional Smartwatch (Watch Pro) - Price: 1299
+    - Medical-grade sensors for continuous ECG monitoring and early detection of irregular heart rhythms.
+    - Always-on sapphire crystal display with high scratch resistance and 2000 nits peak brightness.
+    - Advanced GPS tracking with offline maps, ideal for professional hikers and marathon runners.
+
+14. Fitness Tracker (Watch Fit) - Price: 499
+    - Slim, lightweight band with a 1.47-inch AMOLED screen and customizable watch faces.
+    - Comprehensive 24/7 heart rate, sleep, and stress tracking with personalized health insights.
+    - Exceptional 14-day battery life, so you can track your health without daily charging.
+
+15. 4K Smart TV 55" (TV Vision) - Price: 3999
+    - Quantum Dot technology delivering over a billion shades of color with 100% color volume.
+    - Integrated AI Upscaling that transforms lower-resolution content into stunning near-4K quality.
+    - Support for Dolby Vision and Dolby Atmos for a theater-like sight and sound experience at home.
+
+16. 8K Ultra HD TV 75" (TV Elite) - Price: 15999
+    - State-of-the-art 8K resolution with 33 million pixels for breathtaking detail and realism.
+    - Ultra-slim "Infinity Design" with nearly invisible bezels, blending seamlessly into any modern living room.
+    - Multi-directional "Object Tracking Sound+" technology that follows the action on the screen for total immersion.
+
+17. Mirrorless Camera (Photo Pro) - Price: 7999
+    - Full-frame 45MP sensor with advanced AI-driven subject tracking for eyes, animals, and vehicles.
+    - Supports internal 8K RAW video recording at 30fps and 4K slow-motion at 120fps.
+    - Dual memory card slots (CFexpress + SD) for professional workflow flexibility and data backup.
+
+18. Action Camera (Photo Go) - Price: 1299
+    - Rugged waterproof design up to 10 meters without a housing, built for the toughest conditions.
+    - HyperSmooth 6.0 digital image stabilization for gimbal-like steady video during extreme activities.
+    - Front and rear dual touchscreens for easy framing of vlogs and action shots.
+
+19. Smart Home Hub (Home Connect) - Price: 299
+    - Centralized control for over 50,000 compatible smart devices via Matter and Zigbee protocols.
+    - 7-inch touchscreen display for viewing security camera feeds and managing home schedules.
+    - Enhanced privacy features with a physical camera shutter and a dedicated microphone mute button.
+
+20. Robotic Vacuum Cleaner (Home Clean) - Price: 1799
+    - Advanced LiDAR navigation system that maps your entire home with centimeter-level precision.
+    - Powerful 5000Pa suction combined with an intelligent sonic mopping system for all floor types.
+    - Self-emptying base station that holds up to 60 days of dust, minimizing manual maintenance.
+
+21. High-Speed Router (Net Speed) - Price: 599
+    - Tri-band Wi-Fi 6E technology supporting the new 6GHz band for interference-free high-speed gaming.
+    - Dedicated 2.5G WAN/LAN port for ultra-high-speed fiber internet and NAS connections.
+    - Integrated security suite with real-time threat protection and advanced parental controls.
+
+22. External SSD 1TB (Data Save) - Price: 449
+    - NVMe technology delivering read speeds up to 2000MB/s for near-instant file transfers.
+    - Rugged IP65-rated housing that is resistant to water, dust, and drops from up to 3 meters.
+    - Built-in AES 256-bit hardware encryption with optional fingerprint unlock for maximum security.
