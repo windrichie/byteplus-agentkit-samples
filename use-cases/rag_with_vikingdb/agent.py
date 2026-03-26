@@ -13,30 +13,58 @@
 # limitations under the License.
 
 
+import os
+
 from agentkit.apps import AgentkitAgentServerApp
+from google.adk.tools.mcp_tool.mcp_toolset import (
+    MCPToolset,
+    StreamableHTTPConnectionParams,
+)
+from prompts import SUPPORT_AGENT_PROMPT
 from veadk import Agent, Runner
 from veadk.knowledgebase.knowledgebase import KnowledgeBase
 from veadk.memory.short_term_memory import ShortTermMemory
-import os
+from veadk.memory.long_term_memory import LongTermMemory
 
 kb = KnowledgeBase(
     backend="viking",
     app_name=os.getenv("DATABASE_VIKING_COLLECTION", "agentkit_knowledge_app"),
 )
 
-# Create agent
+memory_collection_name = os.getenv("DATABASE_VIKINGMEM_COLLECTION")
+if not memory_collection_name:
+    raise ValueError("DATABASE_VIKINGMEM_COLLECTION environment variable is not set")
+
+long_term_memory = LongTermMemory(backend="viking_mem", index=memory_collection_name)
+
+instruction = SUPPORT_AGENT_PROMPT
+
+mcp_url = os.getenv("MCP_TOOL_URL")
+mcp_api_key = os.getenv("MCP_TOOL_API_KEY")
+tools = []
+if mcp_url and mcp_api_key:
+    tools = [
+        MCPToolset(
+            connection_params=StreamableHTTPConnectionParams(
+                url=mcp_url,
+                headers={"Authorization": f"Bearer {mcp_api_key}"},
+            )
+        )
+    ]
+
 root_agent = Agent(
     name="rag_vikingdb_agent",
     knowledgebase=kb,
-    instruction="You are a helpful customer support assistant. Use the knowledge base to answer questions about product categories, pricing, and after-sales policies. Answer accurately based on the knowledge base content.",
+    tools=tools,
+    instruction=instruction,
+    long_term_memory=long_term_memory
 )
 
-# Run
-runner = Runner(
-    agent=root_agent,
-    app_name="test_app",
-    user_id="test_user",
-)
+# runner = Runner(
+#     agent=root_agent,
+#     app_name="test_app",
+#     user_id="test_user",
+# )
 
 short_term_memory = ShortTermMemory(backend="local")
 

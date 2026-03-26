@@ -34,11 +34,14 @@ LLM Generates Answer
 
 | Component | Description |
 | - | - |
-| **Agent Service** | agent.py - The main application that integrates KnowledgeBase and VikingDB. |
+| **Agent Service** | agent.py - The main application that integrates KnowledgeBase, VikingDB, LongTermMemory, and MCP Tools. |
 | **Knowledge Base** | VikingDB vector database, storing document vector indexes. |
 | **Document Sources** | product_info.txt, service_policy.txt, outlet_locations.txt, warranty_terms.txt, troubleshooting_guide.txt, repair_guide.txt (generated locally during setup). |
+| **MCP Toolset** | OpenStreetMap MCP - Used for geocoding and calculating distances to the nearest repair outlets. |
+| **Agent Prompts** | prompts.py - Centralized system prompt for the professional support agent. |
 | **Project Configuration** | pyproject.toml - Dependency management (uv tool). |
-| **Short-term Memory** | Maintains session context. |
+| **Short-term Memory** | Maintains session context (local storage). |
+| **Long-term Memory** | VikingDB-backed long-term memory (`viking_mem`) for persisting user context across sessions. |
 
 ### Code Features
 
@@ -61,10 +64,19 @@ kb = KnowledgeBase(
 **Agent Configuration** (agent.py):
 
 ```python
+# Initialize Knowledge Base
+kb = KnowledgeBase(backend="viking", index=os.getenv("DATABASE_VIKING_COLLECTION"))
+
+# Initialize Long-term Memory
+ltm = LongTermMemory(backend="viking_mem", index=os.getenv("DATABASE_VIKINGMEM_COLLECTION"))
+
+# Create agent with tools and memory
 root_agent = Agent(
-    name="test_agent",
+    name="rag_vikingdb_agent",
     knowledgebase=kb,
-    instruction="You are a helpful assistant. Be concise and friendly.",
+    tools=tools,
+    instruction=SUPPORT_AGENT_PROMPT,
+    long_term_memory=ltm
 )
 ```
 
@@ -72,8 +84,9 @@ root_agent = Agent(
 
 ```text
 rag_with_vikingdb/
-├── agent.py           # Agent application entry point (integrates VikingDB)
+├── agent.py           # Agent application entry point (integrates VikingDB & MCP)
 ├── setup_kb.py        # One-time knowledge base initialization
+├── prompts.py         # System prompts for the agent
 ├── config.yaml.example
 ├── config.yaml        # Local config (do not commit secrets)
 ├── requirements.txt   # Python dependency list
@@ -148,6 +161,8 @@ cp config.yaml.example config.yaml
 
 1.  **Credential Names**: The underlying SDK for viking knowledge base backend currently expects `VOLCENGINE_ACCESS_KEY` and `VOLCENGINE_SECRET_KEY` even when using BytePlus. Ensure you set these in your `.env` or `config.yaml`.
 2.  **Cloud Provider**: You MUST set the environment variable `CLOUD_PROVIDER=byteplus`. This tells the SDK to use the BytePlus-specific endpoints (`bytepluses.com`) instead of the default Volcengine ones.
+3.  **MCP Tool Integration**: To use the location-based repair outlet features, set `MCP_TOOL_URL` and `MCP_TOOL_API_KEY`.
+4.  **Long-term Memory**: Set `DATABASE_VIKINGMEM_COLLECTION` to use a separate VikingDB collection for user session memory.
 
 Additional Notes:
 - This example assumes your VikingDB collection is in **CN‑HK** and your TOS bucket is created in **CN‑HK** as well.
@@ -285,6 +300,31 @@ User: I want to buy a device for both work and entertainment. What do you recomm
 Agent: I recommend the Tablet Air. It is thin, portable, and suitable for both work and entertainment, priced at 2999. For after-sales support, we offer a 1-year free warranty and support 7-day no-reason returns.
 ```
 
+### Location-Based Service Query (MCP Integration)
+
+**Finding nearest outlets using OpenStreetMap MCP:**
+
+```text
+User: My laptop screen is cracked. Where can I get it fixed?
+Agent: I'm sorry to hear about your laptop. We have several repair centers in Singapore. To suggest the nearest one, could you please tell me your current location or a nearby landmark?
+
+User: I am at Orchard Road.
+Agent: Based on your location at Orchard Road, the nearest outlet is our flagship store in Funan Mall (about 1.2km away). Other nearby options include Sim Lim Square (2.5km) and Plaza Singapura (0.8km). Would you like the full address and opening hours for any of these?
+```
+
+### Troubleshooting and Repair Query
+
+**Checklists and repair processes from troubleshooting_guide.txt and repair_guide.txt:**
+
+```text
+User: My SmartPhone Ultra is draining battery very fast. What should I do?
+Agent: For fast battery drain on your smartphone, please try the following:
+1. Reduce screen brightness.
+2. Close unused background apps.
+3. Check for battery-intensive processes in settings.
+If the issue persists, you can bring it to any of our outlets. Would you like to book a repair appointment?
+```
+
 ## Effect Demonstration
 
 ## Technical Points
@@ -296,6 +336,12 @@ Agent: I recommend the Tablet Air. It is thin, portable, and suitable for both w
 - **Automatic Indexing**: Automatically builds vector indexes (requires 2-5 minutes for the first time).
 - **Retrieval Method**: Vector retrieval based on semantic similarity.
 - **Applicable Scenarios**: Document knowledge bases, professional Q&A, RAG applications.
+
+### Long-term Memory (LTM)
+
+- **Storage Backend**: `viking_mem` (using VikingDB).
+- **Functionality**: Persists user session history and context across multiple interactions and server restarts.
+- **Context Retrieval**: Automatically retrieves relevant past conversation context to provide more personalized and consistent responses.
 
 ### RAG Workflow
 

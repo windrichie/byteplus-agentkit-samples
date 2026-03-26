@@ -26,3 +26,5 @@ database:
     collection: "<your_vikingdb_collection>"
     base_url: "https://api-knowledgebase.mlp.cn-hongkong.bytepluses.com"
     region: "cn-hongkong"
+  vikingmem:
+    collection: "<your_vikingmem_collection>"
