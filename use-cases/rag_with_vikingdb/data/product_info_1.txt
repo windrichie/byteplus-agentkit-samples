@@ -1,7 +1,0 @@
-Product list and prices:
-1. High-Performance Laptop (Laptop Pro) - Price: 8999
-   - For professional design and gaming, equipped with the latest GPU.
-2. SmartPhone (SmartPhone X) - Price: 4999
-   - 5G support, long battery life.
-3. Tablet (Tablet Air) - Price: 2999
-   - Lightweight and portable, suitable for work and entertainment.
