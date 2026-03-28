@@ -57,7 +57,8 @@ root_agent = Agent(
     knowledgebase=kb,
     tools=tools,
     instruction=instruction,
-    long_term_memory=long_term_memory
+    long_term_memory=long_term_memory,
+    auto_save_session=True
 )
 
 # runner = Runner(
