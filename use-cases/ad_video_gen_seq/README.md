@@ -88,6 +88,8 @@ cp config.yaml.example config.yaml
 Recommended BytePlus config shape:
 
 ```yaml
+cloud_provider: byteplus
+
 model:
   agent:
     name: <your_text_model_id>
@@ -240,8 +242,7 @@ BytePlus adaptation notes:
 
 ```plaintext
 /
-├── README.md                 # Chinese documentation
-├── README_en.md              # English documentation
+├── README.md                 # This documentation
 ├── app/                      # Agents and tool implementations
 │   ├── root/                 # Root orchestration entry (SequentialAgent)
 │   ├── market/               # Marketing planning (video config / shot count, etc.)

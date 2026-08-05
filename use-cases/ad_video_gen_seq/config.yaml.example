@@ -1,24 +1,39 @@
+# BytePlus configuration for the ad_video_gen_seq sample.
+#
+# VeADK reads this file, flattens the keys into UPPER-case environment
+# variables (e.g. model.agent.api_base -> MODEL_AGENT_API_BASE) and applies
+# them at startup. When cloud_provider is "byteplus", BYTEPLUS_ACCESS_KEY /
+# BYTEPLUS_SECRET_KEY are mapped to the VOLCENGINE_* equivalents the SDKs expect.
+#
+# Copy to config.yaml and fill in your values. Keep secrets in .env or your
+# deployment secret manager; config.yaml itself is gitignored.
+
+cloud_provider: byteplus
+
 model:
   agent:
     provider: openai
     name: doubao-seed-1-6-251015
-    api_base: https://ark.cn-beijing.volces.com/api/v3/
+    api_base: https://ark.ap-southeast.bytepluses.com/api/v3/
     api_key:
-    image:
-      name: doubao-seedream-4-5-251128
-      api_base: https://ark.cn-beijing.volces.com/api/v3/
-      api_key:
-    video:
-      name: doubao-seedance-1-5-pro-251215
-      api_base: https://ark.cn-beijing.volces.com/api/v3/
-      api_key:
-    evaluate:
-      name: doubao-seed-1-6-251015    # Must be a model that supports image input
-volcengine:
+  image:
+    name: doubao-seedream-4-5-251128
+    api_base: https://ark.ap-southeast.bytepluses.com/api/v3/
+    api_key:
+  video:
+    name: doubao-seedance-1-5-pro-251215
+    api_base: https://ark.ap-southeast.bytepluses.com/api/v3/
+    api_key:
+  evaluate:
+    name: doubao-seed-1-6-251015    # Must be a model that supports image input
+
+byteplus:
   access_key:
   secret_key:
+  region: ap-southeast-1
 
 database:
   tos:
     bucket:
-
+    region: ap-southeast-1
+    endpoint: tos-ap-southeast-1.bytepluses.com
