@@ -205,3 +205,6 @@ docs/node_modules/
 .zip
 
 .ruff_cache/
+
+# Local scratch / planning notes (not for commit)
+.tmp/

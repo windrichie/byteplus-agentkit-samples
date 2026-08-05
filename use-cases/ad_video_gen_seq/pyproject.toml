@@ -1,0 +1,23 @@
+[project]
+name = "veadk-multimedia-sample"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "agentkit-sdk-python>=0.5.1",
+    "google-adk==1.21.0",
+    "veadk-python==0.5.20",
+    "veadk-python[extensions]==0.5.20",
+    "uvicorn>=0.38.0",
+    "moviepy>=2.2.1",
+    "python-dotenv==1.2.1",
+    "requests>=2.32.5",
+    "tos==2.8.7",
+    "truststore>=0.10.0",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.5.1",
+]
