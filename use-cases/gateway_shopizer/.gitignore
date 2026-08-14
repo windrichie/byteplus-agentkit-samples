@@ -1,0 +1,12 @@
+# Local secrets — never commit
+.env
+.env.local
+.env.sts
+.venv/
+__pycache__/
+jsc_log/
+# NOTE: agent/.agentkit/ is ignored by the REPO-ROOT .gitignore (repo-wide
+# convention) — regenerate it with `agentkit deploy config`
+
+# source screen recording — the committed artifact is the .mp4
+screenshots/*.mov

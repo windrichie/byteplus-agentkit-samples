@@ -1,0 +1,4 @@
+# Pinned to the exact versions verified locally (see README "Gotchas").
+veadk-python==1.1.1
+agentkit-sdk-python==0.8.1
+python-dotenv>=1.0.0

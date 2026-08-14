@@ -1,0 +1,11 @@
+[project]
+name = "shop-ops-copilot"
+version = "0.1.0"
+description = "Shop Ops Copilot — VeADK agent over AgentKit Model Gateway + MCP Gateway (Shopizer legacy app)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "agentkit-sdk-python>=0.5.3",
+    "veadk-python>=1.0.10",
+    "python-dotenv>=1.0.0",
+]
