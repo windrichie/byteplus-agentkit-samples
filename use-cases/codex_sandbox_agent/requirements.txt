@@ -1,0 +1,10 @@
+# Pinned to the combo verified end-to-end (see README "Gotchas").
+# Used by the deploy image; local dev uses pyproject.toml via uv.
+veadk-python==1.1.1
+agentkit-sdk-python==0.8.1
+python-dotenv>=1.0.0
+google-genai
+httpx
+requests
+# aiohttp 3.13 rejects the Ark edge's duplicate `Server:` header; 3.12 is fine
+aiohttp<3.13

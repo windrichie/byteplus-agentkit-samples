@@ -1,0 +1,20 @@
+[project]
+name = "codex_sandbox_agent"
+version = "0.1.0"
+description = "One-shot code factory: VeADK agent driving the codex runtime of an AgentKit CodeEnv sandbox"
+readme = "README.md"
+requires-python = ">=3.12"
+# veadk/agentkit-sdk pinned to the exact combo verified end-to-end in this
+# repo (same pins as use-cases/gateway_shopizer).
+dependencies = [
+    "python-dotenv>=1.2.1",
+    "agentkit-sdk-python==0.8.1",
+    "veadk-python==1.1.1",
+    "google-genai",
+    "httpx",
+    "requests",
+    "truststore; platform_system == 'Darwin' or platform_system == 'Windows'",
+    # aiohttp 3.13 rejects the Ark edge's duplicate `Server:` response header
+    # (feilian-agw + istio-envoy); 3.12.x tolerates it.
+    "aiohttp<3.13",
+]
