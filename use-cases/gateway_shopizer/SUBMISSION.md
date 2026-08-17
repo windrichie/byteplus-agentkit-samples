@@ -21,7 +21,7 @@
 | 2 | Swagger/OpenAPI extraction | 基础 | ✅ | §2 |
 | 2+ | Auto-generate by scanning code | 进阶 | ◻︎ covered by sibling submission | — |
 | 3 | Agent connects via Model Gateway endpoint | 基础 | ✅ | §4, §5 |
-| 3+ | Break primary model → fallback to backup | 进阶 | ✅ configured — live break N/A (shared supplier key, §7) | §4, §7 |
+| 3+ | Break primary model → fallback to backup | 进阶 | ✅ **demonstrated live** (wrong model id → backup serves) | §7 |
 | 4 | Credential hosting + MCP outbound credentials | 进阶 | ✅ | §3.3, §6 |
 
 ---
@@ -231,40 +231,67 @@ and replace this link with the generated `user-attachments` URL.)
 ## 7. 进阶 — Fallback demo (break the primary model)
 
 Backup model `glm-5-2-260617` is configured on the gateway for primary
-`deepseek-v4-flash-ga-260731` (screenshot in §4 — "Backup model" field).
+`deepseek-v4-flash-ga-260731` (screenshot in §4 — "Backup model" field) —
+**and the failover was demonstrated live**.
 
-**Why no live break-the-primary demo here:** both models sit under a *single*
-supplier integration (Ark Model Plaza) with **one shared Supplier API Key and
-one shared Base URL** — and the plaza UI makes models checkboxes, so we can't
-point the primary at an invalid model id either. Any fault we could inject
-(invalid key, invalid URL) would take down the backup together with the
-primary. A live failover demo would require hosting the backup under a
-**second supplier entry** with its own credential.
+**How to break the primary (the right lever):** both models sit under *one*
+Ark Model Plaza supplier entry, so breaking the Supplier API Key / Base URL
+would kill the backup together with the primary. Instead, break the
+**requested model id** — change the runtime's `MODEL_NAME` env var to a
+nonexistent id (`deepseek-v4-flash-ga-260730`, one digit off) and release a
+new runtime version. From the gateway's perspective this is indistinguishable
+from the primary model being gone upstream.
 
-**How a real failover would be observed** (no config change on the agent — same
-endpoint, same proxy key, same requested model id; resilience is a gateway
-property, not app code):
+![Runtime config — MODEL_NAME changed from deepseek-v4-flash-ga-260731 to the invalid …0730, pending publish](screenshots/fallback-wrong-model-envvar.png)
 
-1. `verify/01-model-gateway.sh` prints the response JSON's `model` field —
-   `deepseek-v4-flash-ga-260731…` when the primary serves,
-   `glm-5-2-260617…` once the backup takes over.
-2. The gateway's logs/metrics show failed primary calls and traffic shifting to
-   the backup.
+**Evidence 1 — the agent really passes the wrong id** (runtime instance logs
+after release):
+
+```
+agent.py:442 - Agent `shop_ops_copilot` init done.
+agent.py:443 - Agent: {'name': 'shop_ops_copilot', 'tools': [TrustedMcpToolset …],
+  'model_name': 'deepseek-v4-flash-ga-260730',
+  'model_api_base': 'https://si0oek5vkdg5ks57m8l1l.apigateway-cn-beijing.volceapi.com/ark', …}
+```
+
+**Evidence 2 — the agent keeps working anyway.** In the online test UI the
+copilot answers normally with the invalid model id live. (It even explains it
+has *no visibility* into which model serves it — "that's configured at the
+AgentKit Model Gateway layer" — which is exactly the abstraction the gateway
+provides.)
+
+![Online test — agent answers normally while configured with the invalid model id, served via gateway fallback](screenshots/fallback-agent-still-works.png)
+
+**Evidence 3 — which model actually served** (`verify/01-model-gateway.sh`
+prints the response JSON's `model` field):
+
+```
+# correct id → primary serves
+model: deepseek-v4-flash-ga-260731        ← requested deepseek-v4-flash-ga-260731
+
+# invalid id → HTTP 200, BACKUP serves
+model: glm-5-2-260617                     ← requested deepseek-v4-flash-ga-260730
+```
+
+The agent config is otherwise untouched — same gateway endpoint, same proxy
+key. **Resilience is a gateway property, not app code.** (To restore, set
+`MODEL_NAME` back to `deepseek-v4-flash-ga-260731` and release.)
 
 ---
 
-## 8. Demo video script — online test UI prompts
+## 8. Example prompts
 
-Run in this order; each beat has a talking point.
+Try these in the runtime's online test UI (or any client) — each exercises a
+different part of the chain:
 
-| # | Prompt (paste into online test) | What to say / point out |
-|---|---|---|
-| 1 | `What products do we sell? Show prices and stock in a table, and tell me which store this is.` | Agent calls `list_products` / inventory tools via the **MCP Gateway**; answer is grounded in the legacy DB, incl. store name + currency. |
-| 2 | `Which products are low on stock (under 50 units)?` | The agent reasons over the data it just pulled — a real ops question. |
-| 3 | `Who are our registered customers and where are they located?` | Calls the **admin-protected** customer tool — only possible because the gateway attaches the hosted credential and nginx injects the JWT. |
-| 4 | `Any orders yet? How did we do this week — order count and revenue?` | Store is fresh: the agent honestly reports **zero orders** instead of inventing revenue. Trust in grounded answers. |
-| 5 | `Add a new product: "Oak Desk Lamp", sku lamp1, price 129.99, quantity 200. Check the sku is available first, then confirm it's in the catalog.` | **Write path**: `check_product_sku_available` → `create_product` → `get_product`. Then refresh — it's really in Shopizer. |
-| 6 | `Summarize my store's health in 3 bullet points for tomorrow's ops meeting.` | Synthesis across everything above — the "copilot" payoff. |
+| Prompt | What it exercises |
+|---|---|
+| `What products do we sell? Show prices and stock in a table, and tell me which store this is.` | `list_products` / inventory tools via the **MCP Gateway**; answer grounded in the legacy DB, incl. store name + currency |
+| `Which products are low on stock (under 50 units)?` | Reasoning over freshly pulled data — a real ops question |
+| `Who are our registered customers and where are they located?` | **Admin-protected** customer tool — only possible because the gateway attaches the hosted credential and nginx injects the JWT |
+| `Any orders yet? How did we do this week — order count and revenue?` | Store is fresh: the agent honestly reports **zero orders** instead of inventing revenue |
+| `Add a new product: "Oak Desk Lamp", sku lamp1, price 129.99, quantity 200. Check the sku is available first, then confirm it's in the catalog.` | **Write path**: `check_product_sku_available` → `create_product` → `get_product` |
+| `Summarize my store's health in 3 bullet points for tomorrow's ops meeting.` | Synthesis across tools — the "copilot" payoff |
 
 ---
 

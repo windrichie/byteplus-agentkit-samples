@@ -126,22 +126,25 @@ agentkit deploy
 agentkit invoke shop-ops-copilot -m "How many products and total stock?"
 ```
 
-## Fallback (进阶) — configured, not live-broken
+## Fallback demo (进阶) — verified live
 
 Backup model `glm-5-2-260617` is configured on the gateway for primary
 `deepseek-v4-flash-ga-260731`. The agent pins exactly ONE model id
 (`MODEL_NAME`) — fallback happens gateway-side, not in the SDK.
 
-No live break-the-primary demo in this setup: both models sit under ONE Ark
-Model Plaza supplier entry (one shared Supplier API Key + Base URL, model ids
-are checkboxes), so any injectable fault (bad key / bad URL) would kill the
-backup together with the primary. For a live failover demo, host the backup
-under a **second supplier entry** with its own credential, break the primary's
-supplier, then:
+**Break the primary via the requested model id** (NOT the supplier key — both
+models share one Ark Plaza supplier entry, so killing the key/URL kills the
+backup too):
 
-1. `verify/01-model-gateway.sh` prints the response `model` field —
-   primary id before, backup id after the failover.
-2. Gateway logs/metrics show failed primary calls and traffic on the backup.
+1. Runtime config → env var `MODEL_NAME` → a nonexistent id
+   (`deepseek-v4-flash-ga-260730`) → release a new version.
+2. Runtime logs show the agent passing the wrong id; the agent keeps answering
+   in the online test UI (screenshots in `screenshots/fallback-*.png`).
+3. Proof of who served: `verify/01-model-gateway.sh` prints the response
+   `model` field — `deepseek-v4-flash-ga-260731` for the correct id;
+   `MODEL_NAME=deepseek-v4-flash-ga-260730 ./verify/01-model-gateway.sh`
+   returns HTTP 200 with `model: glm-5-2-260617` (the backup).
+4. Restore: set `MODEL_NAME` back to `deepseek-v4-flash-ga-260731`, release.
 
 ## Demo script (ops copilot persona)
 
