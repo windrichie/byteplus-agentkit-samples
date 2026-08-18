@@ -1,0 +1,11 @@
+# Pinned to the combo verified end-to-end (see README "Gotchas").
+# Used as the source for the vendored wheels/ in the deploy image;
+# local dev uses pyproject.toml via uv.
+veadk-python==1.1.1
+agentkit-sdk-python==0.8.1
+byteplus-python-sdk-v2==3.0.37
+python-dotenv>=1.0.1
+PyJWT[crypto]>=2.10
+requests
+# aiohttp 3.13 rejects the Ark edge's duplicate `Server:` header; 3.12 is fine
+aiohttp==3.12.15

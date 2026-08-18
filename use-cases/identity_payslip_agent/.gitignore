@@ -1,0 +1,8 @@
+.env
+.env.identity
+agentkit.local.yaml
+.agentkit/
+.venv/
+__pycache__/
+output/
+wheels/

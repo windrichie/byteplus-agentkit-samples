@@ -1,0 +1,33 @@
+[project]
+name = "identity_payslip_agent"
+version = "0.1.0"
+description = "HR assistant with one Cedar-gated tool: AgentKit Identity inbound JWT + CheckPermission homework"
+readme = "README.md"
+requires-python = ">=3.12"
+# veadk/agentkit-sdk pinned to the exact combo verified end-to-end in this
+# repo (same pins as use-cases/codex_sandbox_agent).
+dependencies = [
+    "python-dotenv>=1.0.1",  # litellm (via veadk) pins ==1.0.1; keep the floor low
+    "agentkit-sdk-python==0.8.1",
+    "veadk-python==1.1.1",
+    "byteplus-python-sdk-v2==3.0.37",
+    "PyJWT[crypto]>=2.10",
+    "requests",
+    "truststore; platform_system == 'Darwin' or platform_system == 'Windows'",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# The sample runs from the source directory (uv run agent.py); the project
+# itself ships no importable modules - pyproject only pins dependencies.
+py-modules = []
+
+[tool.uv]
+# litellm (via veadk) declares aiohttp>=3.13.3, but aiohttp 3.13 rejects the
+# Ark ap-southeast edge's duplicate `Server:` response header (RFC 9110
+# hardening) and every model call dies with 400. Override the resolution to
+# the last 3.12.x - verified working end-to-end in codex_sandbox_agent.
+override-dependencies = ["aiohttp==3.12.15"]

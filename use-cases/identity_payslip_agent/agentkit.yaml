@@ -1,0 +1,61 @@
+# agentkit.yaml — deploy config TEMPLATE for the new (0.52.5+) agentkit CLI.
+#
+# The CLI does NOT interpolate env vars: generate the real config first with
+#   uv run --no-sync python gen_deploy_config.py
+# which reads .env + .env.identity and writes agentkit.local.yaml (git-ignored),
+# then deploy with:
+#   agentkit deploy --config-file agentkit.local.yaml
+#
+# Secrets therefore never live in this committed file. Placeholders below use
+# shell-style dollar-brace syntax and are resolved by gen_deploy_config.py.
+
+common:
+  agent_name: identity_payslip_agent
+  entry_point: agent.py
+  language: Python
+  language_version: '3.12'
+  agent_type: Basic App
+  dependencies_file: requirements.txt
+  launch_type: cloud
+  cloud_provider: byteplus
+
+launch_types:
+  cloud:
+    region: ap-southeast-1
+    tos_bucket: agentkit-platform-{{account_id}}
+    tos_prefix: agentkit-builds
+    image_tag: '{{timestamp}}'
+    cr_instance_name: agentkit-platform-{{account_id}}
+    cr_namespace_name: agentkit
+    cr_repo_name: identity-payslip-agent
+    build_timeout: 3600
+    cp_workspace_name: agentkit-cli-workspace
+    cp_pipeline_name: Auto
+    project_name: default
+    runtime_id: Auto
+    runtime_name: Auto
+    runtime_role_name: Auto
+    # ── 入站 inbound: platform JWT authorizer at the gateway ──
+    # Verifies user-pool id_tokens against the pool JWKS before any request
+    # reaches the agent: no/forged/expired token -> 401 (demo rows 1-2).
+    runtime_auth_type: custom_jwt
+    runtime_jwt_discovery_url: ${IDENTITY_DISCOVERY_URL}
+    runtime_jwt_allowed_clients:
+      - ${IDENTITY_CLIENT_ID}
+      - ${IDENTITY_SHORTLIVED_CLIENT_ID}
+    # ── runtime env: model + Identity management calls + Cedar namespace ──
+    runtime_envs:
+      MODEL_NAME: deepseek-v4-pro-ga-260813
+      MODEL_AGENT_API_BASE: https://ark.ap-southeast.bytepluses.com/api/v3/
+      MODEL_AGENT_API_KEY: ${MODEL_AGENT_API_KEY}
+      BYTEPLUS_REGION: ap-southeast-1
+      BYTEPLUS_ACCESS_KEY: ${BYTEPLUS_ACCESS_KEY}
+      BYTEPLUS_SECRET_KEY: ${BYTEPLUS_SECRET_KEY}
+      PERMISSION_NAMESPACE: ${PERMISSION_NAMESPACE}
+      IDENTITY_DISCOVERY_URL: ${IDENTITY_DISCOVERY_URL}
+      IDENTITY_ALLOWED_CLIENTS: ${IDENTITY_ALLOWED_CLIENTS}
+      # truststore is a local corp-VPN fix; the Linux container must skip it
+      DISABLE_TRUSTSTORE: "1"
+
+docker_build:
+  platform: auto

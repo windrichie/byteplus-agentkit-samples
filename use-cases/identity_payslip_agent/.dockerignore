@@ -1,0 +1,9 @@
+# Secrets never enter the image.
+.env
+.env.identity
+.venv
+output/
+.agentkit/
+__pycache__/
+*.pyc
+.git/
